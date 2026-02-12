@@ -17,12 +17,24 @@ const HEADERS = [
     { header: 'Description', key: 'description', width: 50 },
 ];
 
+// ── Write queue (mutex) to prevent concurrent overwrites ─────────
+let writeQueue = Promise.resolve();
+
 /**
  * Append a row of data to the Excel workbook.
+ * Uses a queue to ensure only one write happens at a time.
  * Creates the file and storage directory if they don't exist.
  * @param {Object} rowData – keys matching HEADERS[].key
  */
-exports.appendRow = async (rowData) => {
+exports.appendRow = (rowData) => {
+    writeQueue = writeQueue.then(() => _doAppendRow(rowData)).catch((err) => {
+        console.error('appendRow queued error:', err);
+        throw err;
+    });
+    return writeQueue;
+};
+
+async function _doAppendRow(rowData) {
     const filePath = config.EXCEL_PATH;
 
     // Ensure the storage directory exists
@@ -54,7 +66,7 @@ exports.appendRow = async (rowData) => {
     row.font = { name: 'Calibri', size: 11 };
 
     await workbook.xlsx.writeFile(filePath);
-};
+}
 
 /**
  * Read all rows from the Excel workbook.

@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard – GSU Online Services</title>
-    <meta name="description" content="Admin dashboard for viewing and managing GSU Online Service requests.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *,
         *::before,
@@ -18,91 +17,96 @@
         }
 
         :root {
-            --bg-primary: #0f0f1a;
-            --bg-secondary: #1a1a2e;
-            --bg-card: #16213e;
-            --bg-table-row: #1a1a2e;
-            --bg-table-hover: #222244;
-            --text-primary: #e8e8f0;
-            --text-secondary: #9090b0;
+            --bg: #0f0f1a;
+            --surface: #1a1a2e;
+            --card: #16213e;
+            --border: rgba(255, 255, 255, 0.06);
+            --text: #e8e8f0;
+            --muted: #9090b0;
             --accent: #6c63ff;
             --accent-hover: #8078ff;
             --accent-glow: rgba(108, 99, 255, 0.25);
             --success: #2ecc71;
             --warning: #f39c12;
             --danger: #e74c3c;
-            --border: rgba(255, 255, 255, 0.06);
             --radius: 12px;
             --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             line-height: 1.6;
         }
 
-        /* ── Header ─────────────────────────────────────────── */
+        /* ── Header ─────────────────────────────── */
         .header {
-            background: var(--bg-secondary);
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 0 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(12px);
         }
 
-        .header-left {
+        .header__inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            gap: 1rem;
+        }
+
+        .header__left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .header-logo {
-            width: 36px;
-            height: 36px;
+        .header__logo {
+            width: 34px;
+            height: 34px;
             background: linear-gradient(135deg, var(--accent), #a78bfa);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 16px;
+            font-weight: 800;
+            font-size: 15px;
             color: #fff;
         }
 
         .header h1 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff, #a0a0c0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text);
         }
 
-        .header-actions {
+        .header__actions {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        /* ── Buttons ────────────────────────────────────────── */
+        /* ── Buttons ─────────────────────────────── */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
+            gap: 6px;
+            padding: 8px 16px;
             border: none;
             border-radius: 8px;
             font-family: inherit;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             text-decoration: none;
         }
 
@@ -114,13 +118,12 @@
 
         .btn-primary:hover {
             background: var(--accent-hover);
-            box-shadow: 0 4px 20px var(--accent-glow);
             transform: translateY(-1px);
         }
 
         .btn-outline {
             background: transparent;
-            color: var(--text-primary);
+            color: var(--text);
             border: 1px solid var(--border);
         }
 
@@ -129,31 +132,56 @@
             border-color: var(--accent);
         }
 
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 0.25);
+        }
+
+        .btn-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-success:hover {
+            background: rgba(46, 204, 113, 0.25);
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+
         .btn-back {
             background: transparent;
-            color: var(--text-secondary);
-            padding: 10px 16px;
+            color: var(--muted);
+            padding: 8px 12px;
         }
 
         .btn-back:hover {
-            color: var(--text-primary);
+            color: var(--text);
         }
 
-        /* ── Stats Cards ────────────────────────────────────── */
+        /* ── Stats ───────────────────────────────── */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            padding: 2rem 2rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            padding: 1.5rem 2rem 0;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .stat-card {
-            background: var(--bg-card);
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.25rem;
+            padding: 1.1rem;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
@@ -163,45 +191,60 @@
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+            font-size: 0.72rem;
+            color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 600;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin-top: 4px;
-            background: linear-gradient(135deg, var(--accent), #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-top: 2px;
         }
 
-        /* ── Table Container ────────────────────────────────── */
-        .table-container {
-            padding: 2rem;
+        .stat-value.purple {
+            color: var(--accent);
+        }
+
+        .stat-value.green {
+            color: var(--success);
+        }
+
+        .stat-value.yellow {
+            color: var(--warning);
+        }
+
+        .stat-value.red {
+            color: var(--danger);
+        }
+
+        .stat-value.blue {
+            color: #3498db;
+        }
+
+        /* ── Toolbar ─────────────────────────────── */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            padding: 1.5rem 2rem 0;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .table-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .table-header h2 {
-            font-size: 1.1rem;
+        .toolbar h2 {
+            font-size: 1.05rem;
             font-weight: 600;
+            margin-right: auto;
         }
 
         .search-box {
             display: flex;
             align-items: center;
-            background: var(--bg-card);
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 0 12px;
@@ -212,48 +255,61 @@
             border-color: var(--accent);
         }
 
-        .search-box svg {
-            width: 16px;
-            height: 16px;
-            color: var(--text-secondary);
-            flex-shrink: 0;
-        }
-
         .search-box input {
             background: transparent;
             border: none;
-            color: var(--text-primary);
+            color: var(--text);
             font-family: inherit;
-            font-size: 0.85rem;
-            padding: 10px 8px;
+            font-size: 0.82rem;
+            padding: 8px 8px;
             outline: none;
-            width: 220px;
+            width: 200px;
         }
 
         .search-box input::placeholder {
-            color: var(--text-secondary);
+            color: var(--muted);
+        }
+
+        .filter-select {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.82rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* ── Table ───────────────────────────────── */
+        .table-container {
+            padding: 1rem 2rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .table-wrap {
-            background: var(--bg-card);
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            overflow: hidden;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 900px;
         }
 
         thead th {
-            background: var(--bg-secondary);
-            padding: 14px 16px;
-            font-size: 0.75rem;
+            background: var(--surface);
+            padding: 12px 14px;
+            font-size: 0.72rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--text-secondary);
+            color: var(--muted);
             text-align: left;
             border-bottom: 1px solid var(--border);
             position: sticky;
@@ -266,7 +322,7 @@
         }
 
         tbody tr:hover {
-            background: var(--bg-table-hover);
+            background: rgba(255, 255, 255, 0.02);
         }
 
         tbody tr:last-child {
@@ -274,82 +330,77 @@
         }
 
         tbody td {
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            color: var(--text-primary);
+            padding: 10px 14px;
+            font-size: 0.82rem;
         }
 
+        /* ── Badges ──────────────────────────────── */
         .badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
+        }
+
+        .badge-pending {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+
+        .badge-approved {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        .badge-denied {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-type {
             background: var(--accent-glow);
             color: var(--accent);
         }
 
-        .badge-enrollment {
-            background: rgba(46, 204, 113, 0.15);
-            color: #2ecc71;
-        }
-
-        .badge-document {
-            background: rgba(243, 156, 18, 0.15);
-            color: #f39c12;
-        }
-
-        .badge-grade {
-            background: rgba(52, 152, 219, 0.15);
-            color: #3498db;
-        }
-
-        .badge-other {
-            background: rgba(155, 89, 182, 0.15);
-            color: #9b59b6;
-        }
-
         .desc-cell {
-            max-width: 250px;
+            max-width: 200px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .timestamp {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
+        .ts {
+            color: var(--muted);
+            font-size: 0.78rem;
         }
 
-        /* ── Empty State ────────────────────────────────────── */
+        .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ── Empty & Loading ─────────────────────── */
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 1rem;
-            opacity: 0.3;
+            padding: 3rem 2rem;
+            color: var(--muted);
         }
 
         .empty-state h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 0.5rem;
-            color: var(--text-primary);
+            color: var(--text);
         }
 
-        /* ── Loading ────────────────────────────────────────── */
         .loading {
             text-align: center;
-            padding: 4rem;
+            padding: 3rem;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
+        .spinner-lg {
+            width: 36px;
+            height: 36px;
             border: 3px solid var(--border);
             border-top-color: var(--accent);
             border-radius: 50%;
@@ -363,21 +414,21 @@
             }
         }
 
-        /* ── Toast ──────────────────────────────────────────── */
+        /* ── Toast ───────────────────────────────── */
         .toast {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--bg-card);
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 14px 20px;
-            font-size: 0.85rem;
+            padding: 12px 18px;
+            font-size: 0.82rem;
             box-shadow: var(--shadow);
-            transform: translateY(100px);
+            transform: translateY(80px);
             opacity: 0;
             transition: all 0.3s ease;
-            z-index: 1000;
         }
 
         .toast.show {
@@ -385,50 +436,68 @@
             opacity: 1;
         }
 
-        /* ── Responsive ─────────────────────────────────────── */
+        /* ── Pagination ──────────────────────────── */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .pagination button {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .pagination button:hover {
+            border-color: var(--accent);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination span {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* ── Responsive ──────────────────────────── */
         @media (max-width: 768px) {
-            .header {
-                padding: 1rem;
+            .header__inner {
+                padding: 0 1rem;
             }
 
-            .stats {
-                padding: 1rem;
+            .stats,
+            .toolbar,
+            .table-container,
+            .pagination {
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
 
-            .table-container {
-                padding: 1rem;
+            .header__actions {
+                display: none;
             }
 
-            .table-header {
+            .toolbar {
                 flex-direction: column;
-                gap: 12px;
                 align-items: stretch;
             }
 
             .search-box input {
                 width: 100%;
             }
-
-            .header-actions {
-                flex-wrap: wrap;
-            }
-        }
-
-        /* ── Fade-in animation ──────────────────────────────── */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease forwards;
         }
     </style>
 </head>
@@ -437,173 +506,218 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="header-left">
-            <a href="/" class="btn btn-back" title="Back to form">← Back</a>
-            <div class="header-logo">G</div>
-            <h1>Admin Dashboard</h1>
-        </div>
-        <div class="header-actions">
-            <button id="refreshBtn" class="btn btn-outline" onclick="loadData()">
-                ↻ Refresh
-            </button>
-            <a id="downloadBtn" href="/api/requests/download" class="btn btn-primary">
-                ↓ Download Excel
-            </a>
+        <div class="header__inner">
+            <div class="header__left">
+                <a href="/" class="btn btn-back">← Home</a>
+                <div class="header__logo">G</div>
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="header__actions">
+                <button class="btn btn-outline" onclick="loadData()">↻ Refresh</button>
+                <button class="btn btn-primary" onclick="exportCSV()">↓ Export CSV</button>
+                <a href="/admin/logout" class="btn btn-danger">Logout</a>
+            </div>
         </div>
     </header>
 
     <!-- Stats -->
-    <section class="stats fade-in" id="statsSection">
+    <section class="stats" id="statsSection">
         <div class="stat-card">
             <div class="stat-label">Total Requests</div>
-            <div class="stat-value" id="totalCount">–</div>
+            <div class="stat-value purple" id="statTotal">–</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Today's Requests</div>
-            <div class="stat-value" id="todayCount">–</div>
+            <div class="stat-label">Pending</div>
+            <div class="stat-value yellow" id="statPending">–</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Service Types</div>
-            <div class="stat-value" id="typeCount">–</div>
+            <div class="stat-label">Approved</div>
+            <div class="stat-value green" id="statApproved">–</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Denied</div>
+            <div class="stat-value red" id="statDenied">–</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Today</div>
+            <div class="stat-value blue" id="statToday">–</div>
         </div>
     </section>
 
-    <!-- Table -->
-    <div class="table-container fade-in">
-        <div class="table-header">
-            <h2>All Submissions</h2>
-            <div class="search-box">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input type="text" id="searchInput" placeholder="Search by name, ID, email…" oninput="filterTable()">
-            </div>
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <h2>All Requests</h2>
+        <div class="search-box">
+            <span style="color:var(--muted)">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search name, ID, email…" oninput="debouncedLoad()">
         </div>
+        <select class="filter-select" id="filterStatus" onchange="loadData()">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="denied">Denied</option>
+        </select>
+        <select class="filter-select" id="filterType" onchange="loadData()">
+            <option value="all">All Types</option>
+            <option value="Venue">Venue</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Carpentry Works">Carpentry Works</option>
+            <option value="Aircon Maintenance">Aircon Maintenance</option>
+            <option value="Electrical Maintenance">Electrical Maintenance</option>
+            <option value="Janitorial Services">Janitorial Services</option>
+        </select>
+    </div>
 
+    <!-- Table -->
+    <div class="table-container">
         <div class="table-wrap" id="tableWrapper">
-            <div class="loading" id="loadingState">
-                <div class="spinner"></div>
-                <p>Loading submissions…</p>
+            <div class="loading">
+                <div class="spinner-lg"></div>
+                <p>Loading…</p>
             </div>
         </div>
     </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
 
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
-        let allData = [];
+        let currentPage = 1;
+        const LIMIT = 20;
+        let debounceTimer;
+
+        function debouncedLoad() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => { currentPage = 1; loadData(); }, 300);
+        }
 
         async function loadData() {
+            const search = document.getElementById('searchInput').value.trim();
+            const status = document.getElementById('filterStatus').value;
+            const serviceType = document.getElementById('filterType').value;
+
+            const params = new URLSearchParams({
+                page: currentPage, limit: LIMIT,
+                ...(search && { search }),
+                ...(status !== 'all' && { status }),
+                ...(serviceType !== 'all' && { serviceType }),
+            });
+
+            // Load stats
+            loadStats();
+
             const wrapper = document.getElementById('tableWrapper');
-            wrapper.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading submissions…</p></div>';
+            wrapper.innerHTML = '<div class="loading"><div class="spinner-lg"></div><p>Loading…</p></div>';
 
             try {
-                const res = await fetch('/api/requests');
-                if (!res.ok) throw new Error('Failed to fetch');
+                const res = await fetch('/api/requests?' + params);
+                if (res.status === 401) { window.location.href = '/admin/login'; return; }
                 const json = await res.json();
-                allData = json.data || [];
-                updateStats(allData);
-                renderTable(allData);
-                showToast(`Loaded ${allData.length} submission${allData.length !== 1 ? 's' : ''}`);
+                renderTable(json.data || [], json.total || 0, json.page, json.limit);
             } catch (err) {
-                wrapper.innerHTML = `
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <h3>Error loading data</h3>
-                        <p>${err.message}</p>
-                    </div>`;
+                wrapper.innerHTML = '<div class="empty-state"><h3>Error loading data</h3><p>' + err.message + '</p></div>';
             }
         }
 
-        function updateStats(data) {
-            document.getElementById('totalCount').textContent = data.length;
-
-            // Today's count
-            const today = new Date().toISOString().split('T')[0];
-            const todayRequests = data.filter(r => r.timestamp && r.timestamp.startsWith(today));
-            document.getElementById('todayCount').textContent = todayRequests.length;
-
-            // Unique service types
-            const types = new Set(data.map(r => r.serviceType).filter(Boolean));
-            document.getElementById('typeCount').textContent = types.size;
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/requests/stats');
+                if (!res.ok) return;
+                const s = await res.json();
+                document.getElementById('statTotal').textContent = s.total;
+                document.getElementById('statPending').textContent = s.pending;
+                document.getElementById('statApproved').textContent = s.approved;
+                document.getElementById('statDenied').textContent = s.denied;
+                document.getElementById('statToday').textContent = s.todayCount;
+            } catch { }
         }
 
-        function renderTable(data) {
+        function renderTable(data, total, page, limit) {
             const wrapper = document.getElementById('tableWrapper');
 
             if (data.length === 0) {
-                wrapper.innerHTML = `
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-2.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
-                        <h3>No submissions yet</h3>
-                        <p>Submitted requests will appear here.</p>
-                    </div>`;
+                wrapper.innerHTML = '<div class="empty-state"><h3>No requests found</h3><p>Try adjusting your filters or search.</p></div>';
+                document.getElementById('pagination').innerHTML = '';
                 return;
             }
 
-            const rows = data.map((r, i) => `
-                <tr>
-                    <td>${data.length - i}</td>
-                    <td class="timestamp">${formatDate(r.timestamp)}</td>
-                    <td><strong>${esc(r.fullName)}</strong></td>
-                    <td>${esc(r.studentId)}</td>
-                    <td>${esc(r.email)}</td>
-                    <td>${badgeHTML(r.serviceType)}</td>
-                    <td class="desc-cell" title="${esc(r.description)}">${esc(r.description)}</td>
-                </tr>
-            `).join('');
+            const rows = data.map(r => `
+        <tr>
+          <td>${r.id}</td>
+          <td class="ts">${formatDate(r.createdAt)}</td>
+          <td><strong>${esc(r.fullName)}</strong></td>
+          <td>${esc(r.studentId)}</td>
+          <td>${esc(r.email)}</td>
+          <td><span class="badge badge-type">${esc(r.serviceType)}</span></td>
+          <td class="desc-cell" title="${esc(r.description)}">${esc(r.description)}</td>
+          <td>${esc(r.submissionDate)}</td>
+          <td><span class="badge badge-${r.status}">${r.status}</span></td>
+          <td class="actions">
+            ${r.status !== 'approved' ? `<button class="btn btn-success btn-sm" onclick="updateStatus(${r.id},'approved')">✓</button>` : ''}
+            ${r.status !== 'denied' ? `<button class="btn btn-danger btn-sm" onclick="updateStatus(${r.id},'denied')">✗</button>` : ''}
+            ${r.status !== 'pending' ? `<button class="btn btn-outline btn-sm" onclick="updateStatus(${r.id},'pending')">↩</button>` : ''}
+          </td>
+        </tr>
+      `).join('');
 
             wrapper.innerHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Date</th>
-                            <th>Full Name</th>
-                            <th>Student ID</th>
-                            <th>Email</th>
-                            <th>Service Type</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                </table>`;
+        <table>
+          <thead><tr>
+            <th>#</th><th>Date</th><th>Name</th><th>ID</th><th>Email</th>
+            <th>Type</th><th>Description</th><th>Submission</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+            // Pagination
+            const totalPages = Math.ceil(total / limit);
+            const pag = document.getElementById('pagination');
+            pag.innerHTML = `
+        <button ${page <= 1 ? 'disabled' : ''} onclick="goPage(${page - 1})">← Prev</button>
+        <span>Page ${page} of ${totalPages} (${total} total)</span>
+        <button ${page >= totalPages ? 'disabled' : ''} onclick="goPage(${page + 1})">Next →</button>
+      `;
         }
 
-        function filterTable() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            if (!q) return renderTable(allData);
+        function goPage(p) { currentPage = p; loadData(); }
 
-            const filtered = allData.filter(r =>
-                (r.fullName && r.fullName.toLowerCase().includes(q)) ||
-                (r.studentId && r.studentId.toLowerCase().includes(q)) ||
-                (r.email && r.email.toLowerCase().includes(q)) ||
-                (r.serviceType && r.serviceType.toLowerCase().includes(q)) ||
-                (r.description && r.description.toLowerCase().includes(q))
-            );
-            renderTable(filtered);
+        async function updateStatus(id, status) {
+            try {
+                const res = await fetch(`/api/requests/${id}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status }),
+                });
+                if (res.ok) {
+                    showToast(`Request #${id} ${status}`);
+                    loadData();
+                } else {
+                    const d = await res.json();
+                    showToast(d.error || 'Failed', true);
+                }
+            } catch (err) { showToast('Network error', true); }
+        }
+
+        function exportCSV() {
+            const status = document.getElementById('filterStatus').value;
+            const serviceType = document.getElementById('filterType').value;
+            const params = new URLSearchParams({
+                ...(status !== 'all' && { status }),
+                ...(serviceType !== 'all' && { serviceType }),
+            });
+            window.location.href = '/api/requests/export?' + params;
         }
 
         function formatDate(ts) {
             if (!ts) return '–';
             try {
-                const d = new Date(ts);
+                const d = new Date(ts + 'Z');
                 return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                     + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             } catch { return ts; }
-        }
-
-        function badgeHTML(type) {
-            if (!type) return '<span class="badge">Unknown</span>';
-            let cls = 'badge';
-            const lower = type.toLowerCase();
-            if (lower.includes('enroll')) cls += ' badge-enrollment';
-            else if (lower.includes('document') || lower.includes('cert')) cls += ' badge-document';
-            else if (lower.includes('grade') || lower.includes('record')) cls += ' badge-grade';
-            else cls += ' badge-other';
-            return `<span class="${cls}">${esc(type)}</span>`;
         }
 
         function esc(str) {
@@ -613,14 +727,13 @@
             return el.innerHTML;
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+        function showToast(msg, isError) {
+            const t = document.getElementById('toast');
+            t.textContent = (isError ? '❌ ' : '✅ ') + msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
         }
 
-        // Load data on page load
         loadData();
     </script>
 </body>

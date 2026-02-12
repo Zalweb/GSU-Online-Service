@@ -1,12 +1,17 @@
 # Dependencies
 node_modules/
 
-# Environment
+# Environment variables
 .env
 
-# Excel submissions (generated at runtime)
-storage/*.xlsx
+# Database
+storage/
+*.db
+*.sqlite
 
-# OS files
+# Logs
+npm-debug.log*
+
+# OS specific
 .DS_Store
 Thumbs.db

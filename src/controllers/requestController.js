@@ -1,22 +1,21 @@
 /**
  * Request Controller
- * Validates incoming form data and delegates to the Excel helper.
+ * Validates incoming form data and delegates to the request model.
  */
 
-const excelHelper = require('../helpers/excelHelper');
+const requestModel = require('../models/requestModel');
+const { createObjectCsvStringifier } = require('csv-writer');
 
 /**
- * Handle POST /api/requests
+ * POST /api/requests – Submit a new service request (requires user login).
  */
-exports.submitRequest = async (req, res) => {
+exports.submitRequest = (req, res) => {
     try {
-        const { fullName, studentId, email, serviceType, description } = req.body;
+        const user = req.session.user;
+        const { serviceType, description, submissionDate } = req.body;
 
-        // ── Server-side validation ──────────────────────────────────
+        // ── Server-side validation ──────────────────────────────
         const errors = [];
-        if (!fullName || !fullName.trim()) errors.push('Full name is required.');
-        if (!studentId || !studentId.trim()) errors.push('Student ID is required.');
-        if (!email || !email.trim()) errors.push('Email is required.');
         if (!serviceType) errors.push('Service type is required.');
         if (!description || !description.trim()) errors.push('Description is required.');
 
@@ -24,17 +23,15 @@ exports.submitRequest = async (req, res) => {
             return res.status(400).json({ error: errors.join(' ') });
         }
 
-        // ── Build row data ──────────────────────────────────────────
-        const row = {
-            timestamp: new Date().toISOString(),
-            fullName: fullName.trim(),
-            studentId: studentId.trim(),
-            email: email.trim(),
+        // ── Save to database (user info from session) ───────────
+        const row = requestModel.create({
+            fullName: user.fullName,
+            studentId: user.studentId,
+            email: user.email,
             serviceType,
             description: description.trim(),
-        };
-
-        await excelHelper.appendRow(row);
+            submissionDate: submissionDate || new Date().toISOString().split('T')[0],
+        });
 
         return res.status(201).json({
             message: 'Request submitted successfully!',
@@ -47,38 +44,91 @@ exports.submitRequest = async (req, res) => {
 };
 
 /**
- * Handle GET /api/requests
- * Returns all submissions as JSON.
+ * GET /api/requests – List all requests with search/filter (protected).
  */
-exports.getRequests = async (_req, res) => {
+exports.getRequests = (req, res) => {
     try {
-        const rows = await excelHelper.getAllRows();
-        return res.json({ data: rows, count: rows.length });
+        const { search, status, serviceType, page, limit } = req.query;
+        const result = requestModel.findAll({
+            search,
+            status,
+            serviceType,
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 50,
+        });
+        return res.json(result);
     } catch (err) {
         console.error('getRequests error:', err);
-        return res.status(500).json({ error: 'Failed to retrieve submissions.' });
+        return res.status(500).json({ error: 'Failed to retrieve requests.' });
     }
 };
 
 /**
- * Handle GET /api/requests/download
- * Sends the Excel file as a download.
+ * GET /api/requests/stats – Dashboard statistics (protected).
  */
-const path = require('path');
-const fs = require('fs');
-
-exports.downloadExcel = (_req, res) => {
+exports.getStats = (_req, res) => {
     try {
-        const filePath = excelHelper.getFilePath();
+        const stats = requestModel.getStats();
+        return res.json(stats);
+    } catch (err) {
+        console.error('getStats error:', err);
+        return res.status(500).json({ error: 'Failed to retrieve statistics.' });
+    }
+};
 
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ error: 'No submissions file found yet.' });
+/**
+ * PATCH /api/requests/:id/status – Approve or deny a request (protected).
+ */
+exports.updateStatus = (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!['pending', 'approved', 'denied'].includes(status)) {
+            return res.status(400).json({ error: 'Status must be pending, approved, or denied.' });
         }
 
-        const filename = path.basename(filePath);
-        res.download(filePath, filename);
+        const updated = requestModel.updateStatus(id, status);
+        if (!updated) {
+            return res.status(404).json({ error: 'Request not found.' });
+        }
+
+        return res.json({ message: `Request ${status}.` });
     } catch (err) {
-        console.error('downloadExcel error:', err);
-        return res.status(500).json({ error: 'Failed to download file.' });
+        console.error('updateStatus error:', err);
+        return res.status(500).json({ error: 'Failed to update status.' });
+    }
+};
+
+/**
+ * GET /api/requests/export – Download all requests as CSV (protected).
+ */
+exports.exportCSV = (req, res) => {
+    try {
+        const { status, serviceType } = req.query;
+        const rows = requestModel.findAllForExport({ status, serviceType });
+
+        const csvStringifier = createObjectCsvStringifier({
+            header: [
+                { id: 'id', title: 'ID' },
+                { id: 'fullName', title: 'Full Name' },
+                { id: 'studentId', title: 'Student/Employee ID' },
+                { id: 'email', title: 'Email' },
+                { id: 'serviceType', title: 'Service Type' },
+                { id: 'description', title: 'Description' },
+                { id: 'submissionDate', title: 'Submission Date' },
+                { id: 'status', title: 'Status' },
+                { id: 'createdAt', title: 'Created At' },
+            ],
+        });
+
+        const csv = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(rows);
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=gsu-requests.csv');
+        return res.send(csv);
+    } catch (err) {
+        console.error('exportCSV error:', err);
+        return res.status(500).json({ error: 'Failed to export data.' });
     }
 };

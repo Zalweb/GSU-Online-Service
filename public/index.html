@@ -1,132 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="GSU Online Services – Submit service requests easily through our secure online form." />
-  <title>GSU Online Services – Request Form</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="GSU Online Services – Submit service requests easily through our secure online portal.">
+  <title>GSU Online Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
-  <!-- Header Banner -->
-  <header class="header">
-    <div class="header__inner">
-      <div class="header__logo">
-        <svg class="header__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-          <path d="M2 17l10 5 10-5"/>
-          <path d="M2 12l10 5 10-5"/>
-        </svg>
-        <div>
-          <h1 class="header__title">GSU Online Services</h1>
-          <p class="header__subtitle">Service Request Portal</p>
-        </div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="/" class="navbar__brand">
+        <div class="navbar__logo">G</div>
+        <span class="navbar__name">GSU Online Services</span>
+      </a>
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/request.html">Request Form</a></li>
+        <li id="navAuth"><a href="/user/login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero__inner">
+      <h1 class="hero__title">General Services Unit<br>Online Services</h1>
+      <p class="hero__subtitle">Submit service requests quickly and easily through our secure online portal. Track your
+        requests and get updates in real-time.</p>
+      <a href="/request.html" class="hero__cta">Submit a Request →</a>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <h2 class="features__title">Our Services</h2>
+    <div class="features__grid">
+      <div class="feature-card">
+        <div class="feature-card__icon">🏛️</div>
+        <h3 class="feature-card__title">Venue Reservation</h3>
+        <p class="feature-card__desc">Book venues and facilities for your events, conferences, meetings, and academic
+          activities on campus.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon">🚐</div>
+        <h3 class="feature-card__title">Transportation</h3>
+        <p class="feature-card__desc">Request vehicle services for official trips, field work, student activities, and
+          other university-related transportation needs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon">🔧</div>
+        <h3 class="feature-card__title">Carpentry Works</h3>
+        <p class="feature-card__desc">Request repairs, installations, and custom woodwork projects for offices,
+          classrooms, and university facilities.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon">❄️</div>
+        <h3 class="feature-card__title">Aircon Maintenance</h3>
+        <p class="feature-card__desc">Schedule air conditioning maintenance, cleaning, repair, or installation for
+          university buildings and offices.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon">⚡</div>
+        <h3 class="feature-card__title">Electrical Maintenance</h3>
+        <p class="feature-card__desc">Report electrical issues, request wiring work, lighting repairs, and power system
+          maintenance across campus.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon">🧹</div>
+        <h3 class="feature-card__title">Janitorial Services</h3>
+        <p class="feature-card__desc">Request cleaning, sanitation, and janitorial services for classrooms, offices,
+          restrooms, and common areas.</p>
       </div>
     </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="main">
-    <div class="card">
-      <div class="card__header">
-        <h2 class="card__title">Submit a Request</h2>
-        <p class="card__desc">Fill out the form below and we'll get back to you as soon as possible.</p>
-      </div>
-
-      <form id="requestForm" class="form" novalidate>
-        <!-- Full Name -->
-        <div class="form__group">
-          <label for="fullName" class="form__label">Full Name</label>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            class="form__input"
-            placeholder="e.g. Juan Dela Cruz"
-            required
-          />
-          <span class="form__error" id="fullNameError"></span>
-        </div>
-
-        <!-- Student ID -->
-        <div class="form__group">
-          <label for="studentId" class="form__label">Student ID</label>
-          <input
-            type="text"
-            id="studentId"
-            name="studentId"
-            class="form__input"
-            placeholder="e.g. 2024-00123"
-            required
-          />
-          <span class="form__error" id="studentIdError"></span>
-        </div>
-
-        <!-- Email -->
-        <div class="form__group">
-          <label for="email" class="form__label">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            class="form__input"
-            placeholder="e.g. jdelacruz@gsu.edu"
-            required
-          />
-          <span class="form__error" id="emailError"></span>
-        </div>
-
-        <!-- Service Type -->
-        <div class="form__group">
-          <label for="serviceType" class="form__label">Service Type</label>
-          <select id="serviceType" name="serviceType" class="form__input form__select" required>
-            <option value="" disabled selected>Select a service…</option>
-            <option value="Transcript Request">Transcript Request</option>
-            <option value="Enrollment Verification">Enrollment Verification</option>
-            <option value="ID Replacement">ID Replacement</option>
-            <option value="Certificate of Grades">Certificate of Grades</option>
-            <option value="General Inquiry">General Inquiry</option>
-            <option value="Other">Other</option>
-          </select>
-          <span class="form__error" id="serviceTypeError"></span>
-        </div>
-
-        <!-- Description -->
-        <div class="form__group">
-          <label for="description" class="form__label">Description</label>
-          <textarea
-            id="description"
-            name="description"
-            class="form__input form__textarea"
-            rows="4"
-            placeholder="Please describe your request in detail…"
-            required
-          ></textarea>
-          <span class="form__error" id="descriptionError"></span>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" id="submitBtn" class="btn btn--primary">
-          <span class="btn__text">Submit Request</span>
-          <span class="btn__loader" hidden>
-            <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-          </span>
-        </button>
-      </form>
-    </div>
-  </main>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="toast" aria-live="polite"></div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
     <p>&copy; 2026 GSU Online Services. All rights reserved.</p>
   </footer>
 
-  <script src="/js/app.js"></script>
+  <script>
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Dynamic nav: show user name or login link
+    (async () => {
+      try {
+        const res = await fetch('/user/me');
+        const data = await res.json();
+        const el = document.getElementById('navAuth');
+        if (data.loggedIn && data.user) {
+          el.innerHTML = '<a href="/user/logout" style="color:var(--clr-text-muted)">Hi, ' + data.user.fullName.split(' ')[0] + ' · Logout</a>';
+        } else {
+          el.innerHTML = '<a href="/user/login">Login</a> · <a href="/user/register">Register</a>';
+        }
+      } catch { }
+    })();
+  </script>
 </body>
+
 </html>

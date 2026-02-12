@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Submit a service request to the General Services Unit.">
+    <title>Request Form – GSU Online Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .user-banner {
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            border-radius: var(--radius-sm);
+            padding: var(--sp-3) var(--sp-4);
+            margin-bottom: var(--sp-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: var(--fs-sm);
+        }
+
+        .user-banner__info {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-2);
+        }
+
+        .user-banner__avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--grad-header);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .user-banner__name {
+            font-weight: 600;
+            color: var(--clr-text);
+        }
+
+        .user-banner__meta {
+            color: var(--clr-text-muted);
+            font-size: var(--fs-xs);
+        }
+
+        .user-banner a {
+            font-size: var(--fs-xs);
+            color: var(--clr-text-muted);
+        }
+
+        .user-banner a:hover {
+            color: var(--clr-danger);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar__inner">
+            <a href="/" class="navbar__brand">
+                <div class="navbar__logo">G</div>
+                <span class="navbar__name">GSU Online Services</span>
+            </a>
+            <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+            <ul class="navbar__links" id="navLinks">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/request.html" class="active">Request Form</a></li>
+                <li><a href="/user/logout" id="navLogout" style="color:var(--clr-danger)">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Submit a Service Request</h1>
+        <p>Fill out the form below and our team will process your request</p>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="card">
+            <!-- User Banner -->
+            <div class="user-banner" id="userBanner">
+                <div class="user-banner__info">
+                    <div class="user-banner__avatar" id="userAvatar">?</div>
+                    <div>
+                        <div class="user-banner__name" id="userName">Loading…</div>
+                        <div class="user-banner__meta" id="userMeta"></div>
+                    </div>
+                </div>
+                <a href="/user/logout">Logout</a>
+            </div>
+
+            <div class="card__header">
+                <h2 class="card__title">Service Request Form</h2>
+                <p class="card__desc">Your name and email are filled from your account. Just select the service and
+                    describe your request.</p>
+            </div>
+
+            <form id="requestForm" class="form" novalidate>
+                <!-- Service Type & Submission Date -->
+                <div class="form__row">
+                    <div class="form__group">
+                        <label for="serviceType" class="form__label">Request Type</label>
+                        <select id="serviceType" name="serviceType" class="form__input form__select" required>
+                            <option value="" disabled selected>Select a service…</option>
+                            <option value="Venue">Venue</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Carpentry Works">Carpentry Works</option>
+                            <option value="Aircon Maintenance">Aircon Maintenance</option>
+                            <option value="Electrical Maintenance">Electrical Maintenance</option>
+                            <option value="Janitorial Services">Janitorial Services</option>
+                        </select>
+                        <span class="form__error" id="serviceTypeError"></span>
+                    </div>
+                    <div class="form__group">
+                        <label for="submissionDate" class="form__label">Submission Date</label>
+                        <input type="date" id="submissionDate" name="submissionDate" class="form__input" required>
+                        <span class="form__error" id="submissionDateError"></span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form__group">
+                    <label for="description" class="form__label">Description</label>
+                    <textarea id="description" name="description" class="form__input form__textarea" rows="4"
+                        placeholder="Please describe your request in detail…" required></textarea>
+                    <span class="form__error" id="descriptionError"></span>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" id="submitBtn" class="btn btn--primary">
+                    <span class="btn__text">Submit Request</span>
+                    <span class="btn__loader" hidden>
+                        <svg class="spinner" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                        </svg>
+                    </span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 GSU Online Services. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+
+        // Set default date to today
+        document.getElementById('submissionDate').valueAsDate = new Date();
+
+        // Load user info
+        (async () => {
+            try {
+                const res = await fetch('/user/me');
+                const data = await res.json();
+                if (data.loggedIn && data.user) {
+                    document.getElementById('userName').textContent = data.user.fullName;
+                    document.getElementById('userMeta').textContent = data.user.email + ' · ' + data.user.studentId;
+                    document.getElementById('userAvatar').textContent = data.user.fullName.charAt(0).toUpperCase();
+                }
+            } catch { }
+        })();
+
+        // Toast helper
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast is-visible toast--' + type;
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('is-visible'), 4000);
+        }
+
+        // Form submission
+        document.getElementById('requestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const serviceType = document.getElementById('serviceType').value;
+            const submissionDate = document.getElementById('submissionDate').value;
+            const description = document.getElementById('description').value.trim();
+
+            // Validation
+            let valid = true;
+            if (!serviceType) { document.getElementById('serviceTypeError').textContent = 'Please select a service.'; valid = false; }
+            else { document.getElementById('serviceTypeError').textContent = ''; }
+            if (!submissionDate) { document.getElementById('submissionDateError').textContent = 'Date is required.'; valid = false; }
+            else { document.getElementById('submissionDateError').textContent = ''; }
+            if (!description || description.length < 10) { document.getElementById('descriptionError').textContent = 'Please provide at least 10 characters.'; valid = false; }
+            else { document.getElementById('descriptionError').textContent = ''; }
+
+            if (!valid) return;
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.querySelector('.btn__text').hidden = true;
+            btn.querySelector('.btn__loader').hidden = false;
+
+            try {
+                const res = await fetch('/api/requests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ serviceType, submissionDate, description }),
+                });
+                const result = await res.json();
+
+                if (res.ok) {
+                    showToast('✅ ' + (result.message || 'Request submitted!'), 'success');
+                    document.getElementById('requestForm').reset();
+                    document.getElementById('submissionDate').valueAsDate = new Date();
+                } else {
+                    showToast('❌ ' + (result.error || 'Failed.'), 'error');
+                }
+            } catch (err) {
+                showToast('❌ Network error.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.querySelector('.btn__text').hidden = false;
+                btn.querySelector('.btn__loader').hidden = true;
+            }
+        });
+    </script>
+</body>
+
+</html>

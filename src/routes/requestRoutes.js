@@ -1,19 +1,20 @@
 /**
  * Request Routes
- * Defines API endpoints for service request operations.
+ * Public and protected API endpoints for service requests.
  */
 
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/requestController');
+const { requireAuth, requireUser } = require('../middleware/authMiddleware');
 
-// POST /api/requests – submit a new service request
-router.post('/', controller.submitRequest);
+// ── Requires user login ──────────────────────────────────────────
+router.post('/', requireUser, controller.submitRequest);
 
-// GET /api/requests – list all submissions
-router.get('/', controller.getRequests);
-
-// GET /api/requests/download – download the Excel file
-router.get('/download', controller.downloadExcel);
+// ── Protected (admin only) ───────────────────────────────────────
+router.get('/', requireAuth, controller.getRequests);
+router.get('/stats', requireAuth, controller.getStats);
+router.get('/export', requireAuth, controller.exportCSV);
+router.patch('/:id/status', requireAuth, controller.updateStatus);
 
 module.exports = router;

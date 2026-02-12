@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login – GSU Online Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--sp-6);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--clr-surface);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-10);
+            box-shadow: var(--shadow-card);
+            animation: fadeUp 0.5s var(--ease) both;
+        }
+
+        .login-card__logo {
+            width: 56px;
+            height: 56px;
+            background: var(--grad-header);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 24px;
+            color: #fff;
+            margin: 0 auto var(--sp-6);
+        }
+
+        .login-card h1 {
+            text-align: center;
+            font-size: var(--fs-xl);
+            margin-bottom: var(--sp-2);
+        }
+
+        .login-card p {
+            text-align: center;
+            color: var(--clr-text-muted);
+            font-size: var(--fs-sm);
+            margin-bottom: var(--sp-8);
+        }
+
+        .login-error {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: var(--clr-danger);
+            font-size: var(--fs-sm);
+            padding: var(--sp-3) var(--sp-4);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--sp-4);
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar__inner">
+            <a href="/" class="navbar__brand">
+                <div class="navbar__logo">G</div>
+                <span class="navbar__name">GSU Online Services</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-card__logo">G</div>
+            <h1>Admin Login</h1>
+            <p>Sign in to access the admin dashboard</p>
+
+            <div class="login-error" id="loginError"></div>
+
+            <form id="loginForm" class="form">
+                <div class="form__group">
+                    <label for="username" class="form__label">Username</label>
+                    <input type="text" id="username" name="username" class="form__input" placeholder="Enter username"
+                        autocomplete="username" required>
+                </div>
+                <div class="form__group">
+                    <label for="password" class="form__label">Password</label>
+                    <input type="password" id="password" name="password" class="form__input"
+                        placeholder="Enter password" autocomplete="current-password" required>
+                </div>
+                <button type="submit" id="loginBtn" class="btn btn--primary"
+                    style="width: 100%; margin-top: var(--sp-4);">
+                    <span class="btn__text">Sign In</span>
+                    <span class="btn__loader" hidden>
+                        <svg class="spinner" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                        </svg>
+                    </span>
+                </button>
+            </form>
+
+            <p style="margin-top: var(--sp-6); margin-bottom: 0;"><a href="/">← Back to Home</a></p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const errorEl = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.classList.remove('show');
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                errorEl.textContent = 'Please enter both username and password.';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.querySelector('.btn__text').hidden = true;
+            loginBtn.querySelector('.btn__loader').hidden = false;
+
+            try {
+                const res = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.href = data.redirect || '/admin';
+                } else {
+                    errorEl.textContent = data.error || 'Login failed.';
+                    errorEl.classList.add('show');
+                }
+            } catch (err) {
+                errorEl.textContent = 'Network error. Please try again.';
+                errorEl.classList.add('show');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.querySelector('.btn__text').hidden = false;
+                loginBtn.querySelector('.btn__loader').hidden = true;
+            }
+        });
+    </script>
+</body>
+
+</html>

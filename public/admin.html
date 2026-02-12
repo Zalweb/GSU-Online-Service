@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – GSU Online Services</title>
+    <meta name="description" content="Admin dashboard for viewing and managing GSU Online Service requests.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-table-row: #1a1a2e;
+            --bg-table-hover: #222244;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090b0;
+            --accent: #6c63ff;
+            --accent-hover: #8078ff;
+            --accent-glow: rgba(108, 99, 255, 0.25);
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --border: rgba(255, 255, 255, 0.06);
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ── Header ─────────────────────────────────────────── */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a0a0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ── Buttons ────────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 12px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+        }
+
+        .btn-back:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Stats Cards ────────────────────────────────────── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 2rem 2rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 4px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ── Table Container ────────────────────────────────── */
+        .table-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .table-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0 12px;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent);
+        }
+
+        .search-box svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            padding: 10px 8px;
+            outline: none;
+            width: 220px;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: var(--bg-secondary);
+            padding: 14px 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-table-hover);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .badge-enrollment {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+
+        .badge-document {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+        }
+
+        .badge-grade {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+
+        .badge-other {
+            background: rgba(155, 89, 182, 0.15);
+            color: #9b59b6;
+        }
+
+        .desc-cell {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timestamp {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* ── Empty State ────────────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* ── Loading ────────────────────────────────────────── */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Toast ──────────────────────────────────────────── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ── Responsive ─────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .stats {
+                padding: 1rem;
+            }
+
+            .table-container {
+                padding: 1rem;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ── Fade-in animation ──────────────────────────────── */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/" class="btn btn-back" title="Back to form">← Back</a>
+            <div class="header-logo">G</div>
+            <h1>Admin Dashboard</h1>
+        </div>
+        <div class="header-actions">
+            <button id="refreshBtn" class="btn btn-outline" onclick="loadData()">
+                ↻ Refresh
+            </button>
+            <a id="downloadBtn" href="/api/requests/download" class="btn btn-primary">
+                ↓ Download Excel
+            </a>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="stats fade-in" id="statsSection">
+        <div class="stat-card">
+            <div class="stat-label">Total Requests</div>
+            <div class="stat-value" id="totalCount">–</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Today's Requests</div>
+            <div class="stat-value" id="todayCount">–</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Service Types</div>
+            <div class="stat-value" id="typeCount">–</div>
+        </div>
+    </section>
+
+    <!-- Table -->
+    <div class="table-container fade-in">
+        <div class="table-header">
+            <h2>All Submissions</h2>
+            <div class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search by name, ID, email…" oninput="filterTable()">
+            </div>
+        </div>
+
+        <div class="table-wrap" id="tableWrapper">
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <p>Loading submissions…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let allData = [];
+
+        async function loadData() {
+            const wrapper = document.getElementById('tableWrapper');
+            wrapper.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading submissions…</p></div>';
+
+            try {
+                const res = await fetch('/api/requests');
+                if (!res.ok) throw new Error('Failed to fetch');
+                const json = await res.json();
+                allData = json.data || [];
+                updateStats(allData);
+                renderTable(allData);
+                showToast(`Loaded ${allData.length} submission${allData.length !== 1 ? 's' : ''}`);
+            } catch (err) {
+                wrapper.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <h3>Error loading data</h3>
+                        <p>${err.message}</p>
+                    </div>`;
+            }
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalCount').textContent = data.length;
+
+            // Today's count
+            const today = new Date().toISOString().split('T')[0];
+            const todayRequests = data.filter(r => r.timestamp && r.timestamp.startsWith(today));
+            document.getElementById('todayCount').textContent = todayRequests.length;
+
+            // Unique service types
+            const types = new Set(data.map(r => r.serviceType).filter(Boolean));
+            document.getElementById('typeCount').textContent = types.size;
+        }
+
+        function renderTable(data) {
+            const wrapper = document.getElementById('tableWrapper');
+
+            if (data.length === 0) {
+                wrapper.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-2.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+                        <h3>No submissions yet</h3>
+                        <p>Submitted requests will appear here.</p>
+                    </div>`;
+                return;
+            }
+
+            const rows = data.map((r, i) => `
+                <tr>
+                    <td>${data.length - i}</td>
+                    <td class="timestamp">${formatDate(r.timestamp)}</td>
+                    <td><strong>${esc(r.fullName)}</strong></td>
+                    <td>${esc(r.studentId)}</td>
+                    <td>${esc(r.email)}</td>
+                    <td>${badgeHTML(r.serviceType)}</td>
+                    <td class="desc-cell" title="${esc(r.description)}">${esc(r.description)}</td>
+                </tr>
+            `).join('');
+
+            wrapper.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Full Name</th>
+                            <th>Student ID</th>
+                            <th>Email</th>
+                            <th>Service Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>`;
+        }
+
+        function filterTable() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            if (!q) return renderTable(allData);
+
+            const filtered = allData.filter(r =>
+                (r.fullName && r.fullName.toLowerCase().includes(q)) ||
+                (r.studentId && r.studentId.toLowerCase().includes(q)) ||
+                (r.email && r.email.toLowerCase().includes(q)) ||
+                (r.serviceType && r.serviceType.toLowerCase().includes(q)) ||
+                (r.description && r.description.toLowerCase().includes(q))
+            );
+            renderTable(filtered);
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '–';
+            try {
+                const d = new Date(ts);
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                    + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            } catch { return ts; }
+        }
+
+        function badgeHTML(type) {
+            if (!type) return '<span class="badge">Unknown</span>';
+            let cls = 'badge';
+            const lower = type.toLowerCase();
+            if (lower.includes('enroll')) cls += ' badge-enrollment';
+            else if (lower.includes('document') || lower.includes('cert')) cls += ' badge-document';
+            else if (lower.includes('grade') || lower.includes('record')) cls += ' badge-grade';
+            else cls += ' badge-other';
+            return `<span class="${cls}">${esc(type)}</span>`;
+        }
+
+        function esc(str) {
+            if (!str) return '';
+            const el = document.createElement('span');
+            el.textContent = str;
+            return el.innerHTML;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+
+</html>

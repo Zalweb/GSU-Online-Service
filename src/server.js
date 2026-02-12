@@ -22,6 +22,11 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // ─── API Routes ──────────────────────────────────────────────────
 app.use('/api/requests', requestRoutes);
 
+// ─── Admin Dashboard ─────────────────────────────────────────────
+app.get('/admin', (_req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
+});
+
 // ─── Health Check (for Render uptime monitoring) ─────────────────
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 

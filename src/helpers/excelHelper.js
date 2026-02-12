@@ -57,6 +57,44 @@ exports.appendRow = async (rowData) => {
 };
 
 /**
+ * Read all rows from the Excel workbook.
+ * @returns {Array<Object>} Array of submission objects
+ */
+exports.getAllRows = async () => {
+    const filePath = config.EXCEL_PATH;
+
+    if (!fs.existsSync(filePath)) {
+        return [];
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    const worksheet = workbook.getWorksheet('Submissions');
+
+    if (!worksheet) return [];
+
+    const rows = [];
+    const keys = HEADERS.map(h => h.key);
+
+    worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return; // skip header
+        const obj = {};
+        keys.forEach((key, i) => {
+            obj[key] = row.getCell(i + 1).value;
+        });
+        rows.push(obj);
+    });
+
+    return rows;
+};
+
+/**
+ * Get the path to the Excel file.
+ * @returns {string}
+ */
+exports.getFilePath = () => config.EXCEL_PATH;
+
+/**
  * Style the header row with a branded look.
  */
 function _styleHeader(worksheet) {

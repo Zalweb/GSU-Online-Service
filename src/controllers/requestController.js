@@ -45,3 +45,40 @@ exports.submitRequest = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error. Please try again later.' });
     }
 };
+
+/**
+ * Handle GET /api/requests
+ * Returns all submissions as JSON.
+ */
+exports.getRequests = async (_req, res) => {
+    try {
+        const rows = await excelHelper.getAllRows();
+        return res.json({ data: rows, count: rows.length });
+    } catch (err) {
+        console.error('getRequests error:', err);
+        return res.status(500).json({ error: 'Failed to retrieve submissions.' });
+    }
+};
+
+/**
+ * Handle GET /api/requests/download
+ * Sends the Excel file as a download.
+ */
+const path = require('path');
+const fs = require('fs');
+
+exports.downloadExcel = (_req, res) => {
+    try {
+        const filePath = excelHelper.getFilePath();
+
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: 'No submissions file found yet.' });
+        }
+
+        const filename = path.basename(filePath);
+        res.download(filePath, filename);
+    } catch (err) {
+        console.error('downloadExcel error:', err);
+        return res.status(500).json({ error: 'Failed to download file.' });
+    }
+};

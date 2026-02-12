@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+
+# Excel submissions (generated at runtime)
+storage/*.xlsx
+
+# OS files
+.DS_Store
+Thumbs.db

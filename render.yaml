@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: gsu-online-services
+    runtime: node
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: EXCEL_PATH
+        value: /data/storage/submissions.xlsx
+    disk:
+      name: gsu-storage
+      mountPath: /data/storage
+      sizeGB: 1

@@ -7,9 +7,17 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js"
   },
-  "keywords": ["gsu", "online-services", "excel", "express"],
+  "keywords": [
+    "gsu",
+    "online-services",
+    "excel",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",

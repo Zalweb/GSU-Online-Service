@@ -8,6 +8,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
+const SqliteStore = require('better-sqlite3-session-store')(session);
 const config = require('./config/config');
 const database = require('./config/database');
 const requestRoutes = require('./routes/requestRoutes');
@@ -26,6 +27,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session middleware (required for admin + user auth)
 app.use(session({
+    store: new SqliteStore({
+        client: database.getDb(),
+        expired: {
+            clear: true,
+            intervalMs: 900000 // 15min
+        }
+    }),
     secret: config.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
